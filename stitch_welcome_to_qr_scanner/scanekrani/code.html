@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QR and Barcode Scanner</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec49",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102215",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom styles for elements not easily handled by Tailwind utilities alone */
+        .corner-tl { border-top: 4px solid #13ec49; border-left: 4px solid #13ec49; }
+        .corner-tr { border-top: 4px solid #13ec49; border-right: 4px solid #13ec49; }
+        .corner-bl { border-bottom: 4px solid #13ec49; border-left: 4px solid #13ec49; }
+        .corner-br { border-bottom: 4px solid #13ec49; border-right: 4px solid #13ec49; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display overflow-hidden select-none">
+<div class="relative h-screen w-full flex flex-col bg-black group/design-root">
+<!-- 1. Background Camera Feed Simulation -->
+<div class="absolute inset-0 z-0">
+<!-- Simulated camera feed image -->
+<img class="h-full w-full object-cover opacity-70" data-alt="Blurred view of grocery store shelves representing the live camera feed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPghClJ3ginle9_0eLpFizVWAJ9VX6_7tnFxE5VXb0EeZMUZ_MgrBKW1IjbLcNjRMR0suVsaXgJylyX9eMEmERuZioQj1U2U0Qt0CF-x6aPS15X8f9-oTtnglyKwgTXqagw6rNLjjUbCsj3HxTQEgU8G0vqBTLh53L2ifPuOzVnX6ZfKx3X0FRiG3ZdeYMqEDOtHw473szdD4aNnw26GxlwiOe0s-0E-Z-e4uzoYhqwAGiKpry81IsPZZdudqUm-ebYWZ9-Gb1WdBq"/>
+<!-- Vignette overlay to make UI elements pop -->
+<div class="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/90"></div>
+</div>
+<!-- 2. Top App Bar (Floating) -->
+<div class="relative z-20 flex items-center justify-between p-6 pt-14">
+<!-- Flash Toggle -->
+<button class="flex items-center justify-center size-12 rounded-full bg-black/20 backdrop-blur-md text-white border border-white/10 hover:bg-white/10 active:scale-95 transition-all">
+<span class="material-symbols-outlined" style="font-size: 24px;">flash_on</span>
+</button>
+<!-- Title Pill -->
+<div class="px-4 py-1.5 rounded-full bg-black/30 backdrop-blur-sm border border-white/5">
+<span class="text-white/90 text-sm font-semibold tracking-wide">Scanner</span>
+</div>
+<!-- Gallery/Photos Button -->
+<button class="flex items-center justify-center size-12 rounded-full bg-black/20 backdrop-blur-md text-white border border-white/10 hover:bg-white/10 active:scale-95 transition-all">
+<span class="material-symbols-outlined" style="font-size: 24px;">image</span>
+</button>
+</div>
+<!-- 3. Central Scanning Area (Reticle) -->
+<div class="relative z-10 flex-1 flex flex-col items-center justify-center pb-24">
+<!-- Scanning Frame -->
+<div class="relative w-72 h-72 transition-all duration-300">
+<!-- Glowing Corners -->
+<div class="absolute top-0 left-0 w-8 h-8 corner-tl rounded-tl-lg shadow-[0_0_15px_rgba(19,236,73,0.6)]"></div>
+<div class="absolute top-0 right-0 w-8 h-8 corner-tr rounded-tr-lg shadow-[0_0_15px_rgba(19,236,73,0.6)]"></div>
+<div class="absolute bottom-0 left-0 w-8 h-8 corner-bl rounded-bl-lg shadow-[0_0_15px_rgba(19,236,73,0.6)]"></div>
+<div class="absolute bottom-0 right-0 w-8 h-8 corner-br rounded-br-lg shadow-[0_0_15px_rgba(19,236,73,0.6)]"></div>
+<!-- Static Laser Line -->
+<div class="absolute top-1/2 left-2 right-2 h-0.5 bg-primary shadow-[0_0_20px_#13ec49] opacity-90"></div>
+<!-- Subtle Inner Border -->
+<div class="absolute inset-4 border border-white/10 rounded-lg"></div>
+</div>
+<!-- Instruction Text -->
+<div class="mt-8 px-5 py-2.5 rounded-xl bg-black/40 backdrop-blur-md border border-white/5 text-center max-w-xs">
+<p class="text-white/90 text-sm font-medium leading-relaxed">
+                    Align code within frame to scan
+                </p>
+</div>
+</div>
+<!-- 4. Bottom Control Interface -->
+<div class="relative z-20 w-full bg-[#102215]/95 backdrop-blur-xl border-t border-white/5 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+<!-- Drag Handle Indicator -->
+<div class="w-full flex justify-center pt-3 pb-2">
+<div class="w-10 h-1 bg-white/20 rounded-full"></div>
+</div>
+<!-- Mode Switcher (Segmented Control) -->
+<div class="flex justify-center py-5">
+<div class="flex h-12 p-1 bg-black/40 rounded-xl border border-white/10 w-[240px]">
+<label class="flex-1 relative cursor-pointer flex items-center justify-center rounded-lg has-[:checked]:bg-primary has-[:checked]:text-black has-[:checked]:shadow-md text-white/60 transition-all duration-200">
+<input checked="" class="hidden" name="scan-mode" type="radio" value="qr"/>
+<span class="text-xs font-bold tracking-wide">QR Code</span>
+</label>
+<label class="flex-1 relative cursor-pointer flex items-center justify-center rounded-lg has-[:checked]:bg-primary has-[:checked]:text-black has-[:checked]:shadow-md text-white/60 transition-all duration-200">
+<input class="hidden" name="scan-mode" type="radio" value="barcode"/>
+<span class="text-xs font-bold tracking-wide">Barcode</span>
+</label>
+</div>
+</div>
+<!-- Main Controls & Nav -->
+<div class="flex items-end justify-between px-10 pb-8">
+<!-- Left Nav Item: History -->
+<button class="flex flex-col items-center gap-2 text-white/50 hover:text-primary transition-colors pb-2 group">
+<div class="p-2 rounded-full group-hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 28px;">history</span>
+</div>
+<span class="text-[10px] font-semibold tracking-wider uppercase">History</span>
+</button>
+<!-- Center Item: Shutter Button -->
+<div class="relative -top-2">
+<button class="relative group cursor-pointer flex items-center justify-center outline-none">
+<!-- Outer Ring -->
+<div class="size-20 rounded-full border-[3px] border-white/20 bg-transparent group-hover:border-primary/50 group-active:scale-95 transition-all duration-300"></div>
+<!-- Inner Button -->
+<div class="absolute size-16 rounded-full bg-primary shadow-[0_0_25px_rgba(19,236,73,0.3)] group-hover:shadow-[0_0_35px_rgba(19,236,73,0.5)] group-hover:scale-105 transition-all duration-300 flex items-center justify-center">
+<span class="material-symbols-outlined text-black/80" style="font-size: 32px;">qr_code_scanner</span>
+</div>
+</button>
+</div>
+<!-- Right Nav Item: Create/Generate -->
+<button class="flex flex-col items-center gap-2 text-white/50 hover:text-primary transition-colors pb-2 group">
+<div class="p-2 rounded-full group-hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 28px;">add_circle</span>
+</div>
+<span class="text-[10px] font-semibold tracking-wider uppercase">Create</span>
+</button>
+</div>
+<!-- Safe Area Spacer for iOS Home Indicator -->
+<div class="h-6 w-full"></div>
+</div>
+</div>
+</body></html>

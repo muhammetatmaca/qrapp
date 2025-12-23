@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>App Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec49",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102215",
+                        "surface-dark": "#1c3022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom toggle switch styling to match exact green */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #13ec49;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #13ec49;
+        }
+        .ios-group {
+            @apply overflow-hidden rounded-xl bg-white dark:bg-surface-dark mb-6;
+        }
+        .ios-item {
+            @apply flex items-center justify-between p-4 border-b border-gray-100 dark:border-[#2a4532] last:border-0 active:bg-gray-50 dark:active:bg-[#233b2a] transition-colors;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-white antialiased min-h-screen">
+<div class="max-w-md mx-auto min-h-screen relative flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-200 dark:border-white/5 pt-safe-top">
+<div class="flex items-center justify-between px-4 h-14">
+<button class="text-primary flex items-center gap-1 text-base font-medium hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-2xl">chevron_left</span>
+                    Back
+                </button>
+<h1 class="text-lg font-bold absolute left-1/2 -translate-x-1/2">Settings</h1>
+<div class="w-16"></div> <!-- Spacer for alignment -->
+</div>
+<!-- Large Title Area for iOS feel -->
+<div class="px-4 pb-2 pt-2">
+<h2 class="text-3xl font-bold tracking-tight">Scanner</h2>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-4 pt-4 pb-8">
+<!-- Section 1: Scanner Preferences -->
+<div class="mb-2 px-1">
+<h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">Scanner Preferences</h3>
+</div>
+<div class="ios-group">
+<!-- Auto-Focus -->
+<div class="ios-item">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500 dark:text-blue-400">
+<span class="material-symbols-outlined text-[20px]">center_focus_strong</span>
+</div>
+<span class="text-base font-medium">Auto-Focus</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-[51px] h-[31px] bg-gray-200 peer-focus:outline-none dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[27px] after:w-[27px] after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Vibrate on Scan -->
+<div class="ios-item">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-500 dark:text-orange-400">
+<span class="material-symbols-outlined text-[20px]">vibration</span>
+</div>
+<span class="text-base font-medium">Vibrate on Scan</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-[51px] h-[31px] bg-gray-200 peer-focus:outline-none dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[27px] after:w-[27px] after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Beep on Scan -->
+<div class="ios-item">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 dark:text-red-400">
+<span class="material-symbols-outlined text-[20px]">volume_up</span>
+</div>
+<span class="text-base font-medium">Beep on Scan</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-[51px] h-[31px] bg-gray-200 peer-focus:outline-none dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[27px] after:w-[27px] after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Auto Copy -->
+<div class="ios-item">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-500 dark:text-purple-400">
+<span class="material-symbols-outlined text-[20px]">content_copy</span>
+</div>
+<span class="text-base font-medium">Auto-Copy to Clipboard</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-[51px] h-[31px] bg-gray-200 peer-focus:outline-none dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[27px] after:w-[27px] after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<!-- Section 2: Camera & Hardware -->
+<div class="mb-2 px-1 mt-6">
+<h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">Camera &amp; Hardware</h3>
+</div>
+<div class="ios-group">
+<!-- Camera Selection -->
+<div class="ios-item cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-gray-500/20 flex items-center justify-center text-gray-600 dark:text-gray-300">
+<span class="material-symbols-outlined text-[20px]">cameraswitch</span>
+</div>
+<span class="text-base font-medium">Default Camera</span>
+</div>
+<div class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+<span class="text-sm">Rear</span>
+<span class="material-symbols-outlined text-lg text-gray-400">chevron_right</span>
+</div>
+</div>
+<!-- Flashlight Behavior -->
+<div class="ios-item cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
+<span class="material-symbols-outlined text-[20px]">flash_on</span>
+</div>
+<span class="text-base font-medium">Flashlight Mode</span>
+</div>
+<div class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+<span class="text-sm">Manual</span>
+<span class="material-symbols-outlined text-lg text-gray-400">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Section 3: History & Data -->
+<div class="mb-2 px-1 mt-6">
+<h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">History &amp; Data</h3>
+</div>
+<div class="ios-group">
+<!-- Save History -->
+<div class="ios-item">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary-600 dark:text-primary">
+<span class="material-symbols-outlined text-[20px]">history</span>
+</div>
+<span class="text-base font-medium">Save Scan History</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-[51px] h-[31px] bg-gray-200 peer-focus:outline-none dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[27px] after:w-[27px] after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Export CSV -->
+<button class="ios-item w-full text-left">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500 dark:text-blue-400">
+<span class="material-symbols-outlined text-[20px]">ios_share</span>
+</div>
+<span class="text-base font-medium text-blue-600 dark:text-blue-400">Export CSV</span>
+</div>
+</button>
+<!-- Clear History -->
+<button class="ios-item w-full text-left">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 dark:text-red-400">
+<span class="material-symbols-outlined text-[20px]">delete_forever</span>
+</div>
+<span class="text-base font-medium text-red-600 dark:text-red-400">Clear History</span>
+</div>
+</button>
+</div>
+<!-- Section 4: Support & About -->
+<div class="mb-2 px-1 mt-6">
+<h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 ml-1">Support</h3>
+</div>
+<div class="ios-group">
+<button class="ios-item w-full text-left">
+<div class="flex items-center gap-3">
+<span class="text-base font-medium">Privacy Policy</span>
+</div>
+<span class="material-symbols-outlined text-lg text-gray-400">chevron_right</span>
+</button>
+<button class="ios-item w-full text-left">
+<div class="flex items-center gap-3">
+<span class="text-base font-medium">Rate App</span>
+</div>
+<span class="material-symbols-outlined text-lg text-gray-400">chevron_right</span>
+</button>
+<button class="ios-item w-full text-left">
+<div class="flex items-center gap-3">
+<span class="text-base font-medium">Help Center</span>
+</div>
+<span class="material-symbols-outlined text-lg text-gray-400">open_in_new</span>
+</button>
+</div>
+<!-- Footer Version Info -->
+<div class="mt-8 mb-10 text-center">
+<div class="flex justify-center mb-2">
+<div class="w-12 h-12 bg-surface-dark rounded-xl flex items-center justify-center shadow-inner border border-white/5">
+<span class="material-symbols-outlined text-primary text-2xl">qr_code_scanner</span>
+</div>
+</div>
+<p class="text-sm font-medium text-gray-500 dark:text-gray-400">QuickScan Pro</p>
+<p class="text-xs text-gray-400 dark:text-gray-600 mt-1">Version 1.0.4 (Build 2023)</p>
+</div>
+</main>
+<!-- Bottom Tab Bar (Simulated for context) -->
+<div class="fixed bottom-0 left-0 w-full h-[83px] bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-t border-gray-200 dark:border-white/5 flex justify-around items-start pt-3 pb-8 z-50">
+<button class="flex flex-col items-center gap-1 w-16 opacity-50 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[28px]">qr_code_scanner</span>
+<span class="text-[10px] font-medium">Scan</span>
+</button>
+<button class="flex flex-col items-center gap-1 w-16 opacity-50 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[28px]">history</span>
+<span class="text-[10px] font-medium">History</span>
+</button>
+<button class="flex flex-col items-center gap-1 w-16 opacity-50 hover:opacity-100 transition-opacity">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center -mt-4 shadow-lg shadow-primary/40">
+<span class="material-symbols-outlined text-black text-2xl">add</span>
+</div>
+</button>
+<button class="flex flex-col items-center gap-1 w-16 opacity-50 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[28px]">bookmark</span>
+<span class="text-[10px] font-medium">Saved</span>
+</button>
+<button class="flex flex-col items-center gap-1 w-16 text-primary">
+<span class="material-symbols-outlined text-[28px] fill-current">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</button>
+</div>
+</div>
+</body></html>

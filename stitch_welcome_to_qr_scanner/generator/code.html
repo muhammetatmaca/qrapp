@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create QR Code</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec49",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102215",
+                        "surface-dark": "#1c3022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for horizontal tabs */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-50 bg-background-light dark:bg-background-dark border-b border-gray-200 dark:border-white/5">
+<div class="flex items-center p-4 justify-between max-w-lg mx-auto w-full">
+<button class="text-gray-900 dark:text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] text-center">Create QR Code</h2>
+<div class="size-10"></div> <!-- Spacer for alignment -->
+</div>
+</header>
+<main class="flex-1 flex flex-col max-w-lg mx-auto w-full pb-24">
+<!-- Data Type Selector (Chips) -->
+<div class="w-full overflow-hidden pt-4 pb-2">
+<div class="flex gap-3 px-4 overflow-x-auto hide-scrollbar snap-x">
+<!-- Active Chip -->
+<button class="snap-start flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary pl-5 pr-5 shadow-lg shadow-primary/20 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[#102215] text-[20px]">language</span>
+<p class="text-[#102215] text-sm font-bold leading-normal">Website</p>
+</button>
+<!-- Inactive Chips -->
+<button class="snap-start flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 pl-5 pr-5 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400 text-[20px]">description</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Text</p>
+</button>
+<button class="snap-start flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 pl-5 pr-5 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400 text-[20px]">wifi</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Wi-Fi</p>
+</button>
+<button class="snap-start flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 pl-5 pr-5 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400 text-[20px]">person</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Contact</p>
+</button>
+<button class="snap-start flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 pl-5 pr-5 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400 text-[20px]">calendar_today</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Event</p>
+</button>
+</div>
+</div>
+<!-- Divider -->
+<div class="h-4"></div>
+<!-- Input Form Section -->
+<div class="px-4 space-y-6">
+<!-- URL Input -->
+<div class="space-y-3">
+<label class="block text-gray-900 dark:text-white text-sm font-bold ml-1">Website URL</label>
+<div class="relative group">
+<div class="absolute top-4 left-4 text-gray-400 dark:text-gray-500 pointer-events-none">
+<span class="material-symbols-outlined">link</span>
+</div>
+<input class="form-input block w-full rounded-xl border-gray-200 dark:border-none bg-white dark:bg-surface-dark text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent h-14 pl-12 pr-4 placeholder:text-gray-400 dark:placeholder:text-[#92c9a0]/60 text-base font-normal shadow-sm" placeholder="https://example.com" type="url"/>
+</div>
+<p class="text-xs text-gray-500 dark:text-gray-400 ml-1">Enter the full URL starting with https://</p>
+</div>
+<!-- Optional Name -->
+<div class="space-y-3">
+<label class="block text-gray-900 dark:text-white text-sm font-bold ml-1">Label (Optional)</label>
+<div class="relative">
+<input class="form-input block w-full rounded-xl border-gray-200 dark:border-none bg-white dark:bg-surface-dark text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent h-14 px-4 placeholder:text-gray-400 dark:placeholder:text-[#92c9a0]/60 text-base font-normal shadow-sm" placeholder="My Portfolio" type="text"/>
+</div>
+</div>
+<!-- Customization Section (Accordion-like visual) -->
+<div class="pt-4">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-gray-900 dark:text-white text-sm font-bold">Customize Design</h3>
+<span class="text-primary text-xs font-semibold uppercase tracking-wider">New</span>
+</div>
+<div class="bg-white dark:bg-surface-dark rounded-xl p-4 shadow-sm space-y-4">
+<!-- Colors -->
+<div>
+<p class="text-xs text-gray-500 dark:text-gray-400 font-medium mb-3 uppercase tracking-wide">Color</p>
+<div class="flex gap-3">
+<button aria-label="Black" class="size-8 rounded-full bg-black border-2 border-white ring-2 ring-gray-300 dark:ring-gray-600 ring-offset-2 ring-offset-[#1c3022] cursor-pointer"></button>
+<button aria-label="Green" class="size-8 rounded-full bg-[#13ec49] hover:ring-2 hover:ring-gray-400 hover:ring-offset-2 hover:ring-offset-[#1c3022] transition-all cursor-pointer"></button>
+<button aria-label="Blue" class="size-8 rounded-full bg-blue-500 hover:ring-2 hover:ring-gray-400 hover:ring-offset-2 hover:ring-offset-[#1c3022] transition-all cursor-pointer"></button>
+<button aria-label="Purple" class="size-8 rounded-full bg-purple-500 hover:ring-2 hover:ring-gray-400 hover:ring-offset-2 hover:ring-offset-[#1c3022] transition-all cursor-pointer"></button>
+<button aria-label="Gradient" class="size-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 hover:ring-2 hover:ring-gray-400 hover:ring-offset-2 hover:ring-offset-[#1c3022] transition-all cursor-pointer"></button>
+</div>
+</div>
+<div class="h-px bg-gray-100 dark:bg-white/5 w-full"></div>
+<!-- Shapes -->
+<div>
+<p class="text-xs text-gray-500 dark:text-gray-400 font-medium mb-3 uppercase tracking-wide">Pattern</p>
+<div class="flex gap-2">
+<div class="h-10 w-14 rounded bg-gray-100 dark:bg-background-dark border-2 border-primary flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-primary text-lg">grid_4x4</span>
+</div>
+<div class="h-10 w-14 rounded bg-gray-100 dark:bg-background-dark hover:bg-gray-200 dark:hover:bg-white/5 flex items-center justify-center cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-gray-400 text-lg">apps</span>
+</div>
+<div class="h-10 w-14 rounded bg-gray-100 dark:bg-background-dark hover:bg-gray-200 dark:hover:bg-white/5 flex items-center justify-center cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-gray-400 text-lg">circle</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent/Preview Placeholder -->
+<div class="pt-2">
+<h3 class="text-gray-900 dark:text-white text-sm font-bold mb-3">Recently Generated</h3>
+<div class="flex items-center gap-3 bg-white dark:bg-surface-dark p-3 rounded-xl shadow-sm border border-gray-100 dark:border-transparent">
+<div class="size-12 bg-white rounded-lg p-1 shrink-0 flex items-center justify-center overflow-hidden">
+<!-- Abstract QR representation using CSS Grid -->
+<div class="grid grid-cols-3 grid-rows-3 gap-0.5 w-full h-full">
+<div class="bg-black col-span-1 row-span-1 rounded-[1px]"></div>
+<div class="bg-black col-span-1 row-span-1 rounded-[1px]"></div>
+<div class="bg-transparent col-span-1 row-span-1"></div>
+<div class="bg-black col-span-1 row-span-1 rounded-[1px]"></div>
+<div class="bg-black col-span-1 row-span-1 rounded-[1px]"></div>
+<div class="bg-black col-span-1 row-span-1 rounded-[1px]"></div>
+<div class="bg-black col-span-1 row-span-1 rounded-[1px]"></div>
+<div class="bg-transparent col-span-1 row-span-1"></div>
+<div class="bg-black col-span-1 row-span-1 rounded-[1px]"></div>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-gray-900 dark:text-white text-sm font-semibold truncate">mysite-promo.com</p>
+<p class="text-gray-500 dark:text-gray-400 text-xs truncate">Website • Today, 10:43 AM</p>
+</div>
+<button class="size-8 flex items-center justify-center text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Action Bar -->
+<div class="fixed bottom-0 left-0 right-0 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-xl border-t border-gray-200 dark:border-white/5 p-4 z-40">
+<div class="max-w-lg mx-auto w-full">
+<button class="w-full flex items-center justify-center gap-2 rounded-xl h-14 bg-primary text-[#102215] text-lg font-bold leading-normal tracking-wide shadow-lg shadow-primary/25 hover:brightness-110 active:scale-[0.99] transition-all">
+<span class="material-symbols-outlined">qr_code_2</span>
+<span>Generate Code</span>
+</button>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Welcome to QR Scanner</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#13ec49",
+                "background-light": "#f6f8f6",
+                "background-dark": "#102215",
+              },
+              fontFamily: {
+                "display": ["Inter", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+<style>
+        /* Custom utilities if needed */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-gray-900 dark:text-white font-display antialiased selection:bg-primary selection:text-background-dark">
+<div class="relative flex h-screen w-full max-w-md mx-auto flex-col overflow-hidden bg-background-light dark:bg-background-dark transition-colors duration-300">
+<!-- Top Navigation Area -->
+<div class="flex items-center justify-between px-6 pt-12 pb-4 z-10">
+<div class="w-12"></div> <!-- Spacer for balance -->
+<span class="text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Welcome to QR Scanner</span>
+<button class="w-12 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-primary transition-colors">Skip</button>
+</div>
+<!-- Main Content Area -->
+<div class="flex flex-1 flex-col justify-center px-6 gap-8">
+<!-- Hero Illustration -->
+<div class="relative w-full aspect-[4/5] max-h-[400px] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-black/5 dark:ring-white/10 group">
+<!-- Background Image -->
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="3D abstract smartphone interface scanning a glowing green code" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBaadX6pynxDwOZC_GmRMcGwiz4joB4dhif1LMg2iFTOp4zQsapq8KNxgy-2NYZFeX7BqNJmMksWWfUylL-D-hX783n9rVsmF2JCfxMiDjv0NKaRYOvIHYcZoJs-miDo96lwQq8fNx1ZsNxAeekF2Ir9RRJJJrgVaaGXNMbwVpiYnaFRxa4g22ejMBggpu9jmqULCx0EeXgLTkrkfiLHjvRVqPsFE3rfRXv6u-Lro-E13dyGLOJDCNKxyK-WzO1sTkdICLj8kVFhXI3');">
+</div>
+<!-- Overlay Gradient for text legibility at bottom -->
+<div class="absolute inset-0 bg-gradient-to-t from-background-light dark:from-background-dark via-transparent to-transparent opacity-20"></div>
+<!-- Stylized Scan Line -->
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-primary shadow-[0_0_15px_rgba(19,236,73,0.8)] opacity-80"></div>
+<!-- Scan Corners -->
+<div class="absolute inset-8 border-2 border-dashed border-white/30 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white/80 text-6xl drop-shadow-lg">qr_code_scanner</span>
+</div>
+</div>
+<!-- Text Content -->
+<div class="flex flex-col items-center text-center space-y-4">
+<h1 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white leading-tight">
+                    Scan &amp; <span class="text-primary">Generate</span>
+</h1>
+<p class="text-base text-gray-600 dark:text-gray-300 leading-relaxed max-w-xs mx-auto">
+                    Instantly decode barcodes or create your own custom QR codes in seconds with lightning-fast detection.
+                </p>
+</div>
+</div>
+<!-- Bottom Actions Area -->
+<div class="flex flex-col items-center gap-6 px-6 pb-10 pt-4">
+<!-- Page Indicators -->
+<div class="flex items-center gap-2">
+<div class="h-2 w-8 rounded-full bg-primary shadow-[0_0_8px_rgba(19,236,73,0.4)]"></div>
+<div class="h-2 w-2 rounded-full bg-gray-300 dark:bg-gray-700"></div>
+<div class="h-2 w-2 rounded-full bg-gray-300 dark:bg-gray-700"></div>
+</div>
+<!-- Primary Action Button -->
+<button class="w-full flex items-center justify-center gap-2 rounded-xl bg-primary h-14 px-6 text-background-dark text-lg font-bold shadow-lg hover:shadow-primary/25 hover:brightness-105 active:scale-[0.98] transition-all duration-200">
+<span>Get Started</span>
+<span class="material-symbols-outlined text-xl font-bold">arrow_forward</span>
+</button>
+<!-- Safe Area Spacer for iOS Home Indicator -->
+<div class="h-2"></div>
+</div>
+</div>
+</body></html>

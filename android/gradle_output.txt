@@ -1,0 +1,89 @@
+﻿> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy UP-TO-DATE
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+
+> Configure project :mobile_scanner
+Warning: The plugin mobile_scanner requires Android SDK version 36 or higher.
+For more information about build configuration, see https://flutter.dev/to/review-gradle-config.
+.\gradlew.bat : 
+At line:1 char:1
++ .\gradlew.bat assembleDebu
+g 2>&1 | Out-File -FilePath 
+gradle_output.t ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~
+    + CategoryInfo          
+    : NotSpecified: (:Stri  
+  ng) [], RemoteException
+    + FullyQualifiedErrorId 
+    : NativeCommandError
+ 
+FAILURE: Build completed wit
+h 2 failures.
+
+1: Task failed with an excep
+tion.
+-----------
+* Where:
+Build file 'C:\Users\muham\A
+ppData\Local\Pub\Cache\hoste
+d\pub.dev\share_plus-12.0.1\
+android\build.gradle' line: 
+29
+
+* What went wrong:
+A problem occurred evaluatin
+g project ':share_plus'.
+> Could not get unknown prop
+erty 'flutter' for extension
+ 'android' of type com.andro
+id.build.gradle.LibraryExten
+sion.
+
+* Try:
+> Run with --stacktrace opti
+on to get the stack trace.
+> Run with --info or --debug
+ option to get more log outp
+ut.
+> Run with --scan to get ful
+l insights.
+> Get more help at https://h
+elp.gradle.org.
+============================
+============================
+======================
+
+2: Task failed with an excep
+tion.
+-----------
+* What went wrong:
+A problem occurred configuri
+ng project ':share_plus'.
+> Failed to notify project e
+valuation listener.
+   > Cannot invoke method su
+bstring() on null object
+   > compileSdkVersion is no
+t specified. Please add it t
+o build.gradle
+
+* Try:
+> Run with --stacktrace opti
+on to get the stack trace.
+> Run with --info or --debug
+ option to get more log outp
+ut.
+> Run with --scan to get ful
+l insights.
+> Get more help at https://h
+elp.gradle.org.
+============================
+============================
+======================
+
+BU¦LD FAILED in 1s
+4 actionable tasks: 4 up-to-date

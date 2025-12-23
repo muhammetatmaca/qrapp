@@ -1,0 +1,21 @@
+
+Running Gradle task 'assembleDebug'...                          
+
+FAILURE: Build failed with an exception.
+
+* Where:
+Build file 'C:\Users\muham\qrapp\android\build.gradle' line: 15
+
+* What went wrong:
+A problem occurred evaluating root project 'android'.
+> Cannot run Project.afterEvaluate(Closure) when the project is already evaluated.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BU�LD FAILED in 1s
+Running Gradle task 'assembleDebug'...                           1.746ms
+Gradle task assembleDebug failed with exit code 1
