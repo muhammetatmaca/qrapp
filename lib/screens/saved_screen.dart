@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:qrapp/widgets/native_ad_widget.dart';
 
 class SavedScreen extends StatefulWidget {
   const SavedScreen({super.key});
@@ -540,6 +541,11 @@ class _SavedScreenState extends State<SavedScreen> {
                 ),
               ),
             ),
+          ),
+
+          // Native Ad
+          const SliverToBoxAdapter(
+            child: NativeAdWidget(),
           ),
 
           // Empty State

@@ -4,6 +4,7 @@ import 'package:qrapp/services/history_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
+import 'package:qrapp/widgets/native_ad_widget.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -343,6 +344,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
               ),
             ),
+          ),
+
+          // Native Ad
+          const SliverToBoxAdapter(
+            child: NativeAdWidget(),
           ),
 
           // Empty State

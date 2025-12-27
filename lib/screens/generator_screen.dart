@@ -8,6 +8,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:qrapp/services/saved_service.dart';
+import 'package:qrapp/services/ad_service.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -69,6 +70,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
   int _selectedPattern = 0; // 0: Square, 1: Rounded, 2: Circle, 3: Diamond
   String? _generatedData;
   List<RecentGeneratedItem> _recentItems = [];
+  bool _isAdLoading = false;
 
   final List<Map<String, dynamic>> _types = [
     {'name': 'Website', 'icon': Icons.language, 'hint': 'https://example.com'},
@@ -243,6 +245,29 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
       return;
     }
 
+    // Show rewarded ad before generating QR
+    if (AdService.instance.isRewardedAdReady) {
+      setState(() => _isAdLoading = true);
+      
+      AdService.instance.showRewardedAd(
+        onUserEarnedReward: (ad, reward) {
+          // User watched the ad, now generate QR
+          _completeQRGeneration(data);
+        },
+        onAdNotReady: () {
+          // Ad not ready, generate QR anyway
+          _completeQRGeneration(data);
+        },
+      );
+      
+      setState(() => _isAdLoading = false);
+    } else {
+      // Ad not ready, generate QR directly
+      _completeQRGeneration(data);
+    }
+  }
+
+  void _completeQRGeneration(String data) {
     setState(() {
       _generatedData = data;
     });
@@ -263,28 +288,44 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
 
   Future<void> _downloadQRCode() async {
     try {
+      // Wait for render to complete
+      await Future.delayed(const Duration(milliseconds: 300));
+      
       final boundary = _qrKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-      if (boundary == null) return;
+      if (boundary == null) {
+        throw Exception('QR code widget not found. Please try again.');
+      }
+      
+      // Check if boundary has been laid out
+      if (!boundary.hasSize) {
+        throw Exception('QR code not rendered yet. Please try again.');
+      }
 
       final image = await boundary.toImage(pixelRatio: 4.0);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      if (byteData == null) return;
+      if (byteData == null) {
+        throw Exception('Failed to convert image.');
+      }
 
-      final directory = await getApplicationDocumentsDirectory();
-      final fileName = 'qr_code_${DateTime.now().millisecondsSinceEpoch}.png';
-      final file = File('${directory.path}/$fileName');
+      // Create temp file and share/save it
+      final tempDir = Directory.systemTemp;
+      final fileName = 'QR_Code_${DateTime.now().millisecondsSinceEpoch}.png';
+      final file = File('${tempDir.path}/$fileName');
       await file.writeAsBytes(byteData.buffer.asUint8List());
 
+      // Close modal first
       if (mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Saved to $fileName'),
-            backgroundColor: const Color(0xFF13EC49),
-          ),
-        );
       }
+
+      // Use share to save - this opens native save dialog
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        subject: 'QR Code - ${_labelController.text.isNotEmpty ? _labelController.text : _selectedType}',
+      );
+
     } catch (e) {
+      debugPrint('Download error: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -298,12 +339,17 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
 
   Future<void> _shareQRCode() async {
     try {
-      // Wait for the widget to be rendered
-      await Future.delayed(const Duration(milliseconds: 100));
+      // Wait for the widget to be fully rendered
+      await Future.delayed(const Duration(milliseconds: 300));
       
       final boundary = _qrKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
       if (boundary == null) {
-        throw Exception('QR code not rendered');
+        throw Exception('QR code widget not found. Please try again.');
+      }
+      
+      // Check if boundary has been laid out
+      if (!boundary.hasSize) {
+        throw Exception('QR code not rendered yet. Please try again.');
       }
 
       final image = await boundary.toImage(pixelRatio: 3.0);
@@ -312,11 +358,14 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
         throw Exception('Failed to convert to image');
       }
 
-      final directory = await getTemporaryDirectory();
-      final file = File('${directory.path}/qr_code_${DateTime.now().millisecondsSinceEpoch}.png');
+      final tempDir = Directory.systemTemp;
+      final file = File('${tempDir.path}/QR_Code_${DateTime.now().millisecondsSinceEpoch}.png');
       await file.writeAsBytes(byteData.buffer.asUint8List());
 
-      Navigator.pop(context);
+      // Close modal first
+      if (mounted) {
+        Navigator.pop(context);
+      }
       
       await Share.shareXFiles(
         [XFile(file.path)],
@@ -324,6 +373,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
         text: _labelController.text.isNotEmpty ? _labelController.text : 'Check out my QR code!',
       );
     } catch (e) {
+      debugPrint('Share error: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -1246,43 +1296,46 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        Row(
-                          children: List.generate(_patterns.length, (index) {
-                            final pattern = _patterns[index];
-                            final isSelected = _selectedPattern == index;
-                            return GestureDetector(
-                              onTap: () => setState(() => _selectedPattern = index),
-                              child: Container(
-                                margin: const EdgeInsets.only(right: 12),
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: isSelected ? primaryColor : bgColor,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: isSelected
-                                      ? null
-                                      : Border.all(color: Colors.white.withOpacity(0.1)),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      pattern['icon'],
-                                      color: isSelected ? Colors.black : Colors.grey,
-                                      size: 24,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      pattern['name'],
-                                      style: GoogleFonts.inter(
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: List.generate(_patterns.length, (index) {
+                              final pattern = _patterns[index];
+                              final isSelected = _selectedPattern == index;
+                              return GestureDetector(
+                                onTap: () => setState(() => _selectedPattern = index),
+                                child: Container(
+                                  margin: const EdgeInsets.only(right: 12),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: isSelected ? primaryColor : bgColor,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: isSelected
+                                        ? null
+                                        : Border.all(color: Colors.white.withOpacity(0.1)),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        pattern['icon'],
                                         color: isSelected ? Colors.black : Colors.grey,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w600,
+                                        size: 24,
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        pattern['name'],
+                                        style: GoogleFonts.inter(
+                                          color: isSelected ? Colors.black : Colors.grey,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          }),
+                              );
+                            }),
+                          ),
                         ),
                       ],
                     ),

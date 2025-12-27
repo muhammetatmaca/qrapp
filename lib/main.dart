@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:qrapp/screens/welcome_screen.dart';
+import 'package:qrapp/services/ad_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize AdMob SDK only on supported platforms (Android/iOS)
+  // AdService handles platform detection internally
+  if (!kIsWeb) {
+    await AdService.initialize();
+  }
+  
   runApp(const MyApp());
 }
 

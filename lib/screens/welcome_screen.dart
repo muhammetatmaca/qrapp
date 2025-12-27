@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'dart:math' as math;
 import 'package:qrapp/screens/scanner_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -14,6 +15,42 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  bool _isCheckingOnboarding = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkOnboardingStatus();
+  }
+
+  Future<void> _checkOnboardingStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
+    
+    if (hasSeenOnboarding && mounted) {
+      // Skip onboarding and go directly to scanner
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ScannerScreen()),
+      );
+    } else {
+      setState(() {
+        _isCheckingOnboarding = false;
+      });
+    }
+  }
+
+  Future<void> _completeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenOnboarding', true);
+    
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ScannerScreen()),
+      );
+    }
+  }
 
   final List<OnboardingData> _pages = [
     OnboardingData(
@@ -47,6 +84,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     const primaryColor = Color(0xFF13EC49);
     const bgColor = Color(0xFF102215);
 
+    // Show loading while checking onboarding status
+    if (_isCheckingOnboarding) {
+      return Scaffold(
+        backgroundColor: bgColor,
+        body: const Center(
+          child: CircularProgressIndicator(color: Color(0xFF13EC49)),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: bgColor,
       body: SafeArea(
@@ -69,7 +116,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: _completeOnboarding,
                     child: Text(
                       "Skip",
                       style: GoogleFonts.inter(
@@ -144,11 +191,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             curve: Curves.easeInOut,
                           );
                         } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ScannerScreen()),
-                          );
+                          // Complete onboarding and save state
+                          _completeOnboarding();
                         }
                       },
                       style: ElevatedButton.styleFrom(

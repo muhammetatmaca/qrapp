@@ -8,6 +8,7 @@ import 'package:qrapp/screens/settings_screen.dart';
 import 'package:qrapp/screens/history_screen.dart';
 import 'package:qrapp/screens/saved_screen.dart';
 import 'package:qrapp/screens/generator_screen.dart';
+import 'package:qrapp/screens/batch_scan_screen.dart';
 import 'package:qrapp/services/settings_service.dart';
 import 'package:qrapp/services/history_service.dart';
 import 'package:qrapp/services/saved_service.dart';
@@ -20,7 +21,7 @@ class ScannerScreen extends StatefulWidget {
   State<ScannerScreen> createState() => _ScannerScreenState();
 }
 
-class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProviderStateMixin {
+class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   MobileScannerController? _controller;
   late AnimationController _animationController;
   bool _isFlashOn = false;
@@ -33,6 +34,7 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -40,35 +42,77 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
     _initCameraWithSettings();
   }
 
-  Future<void> _initCameraWithSettings() async {
-    final cameraSettings = await SettingsService.loadCameraSettings();
-    _defaultCamera = cameraSettings['defaultCamera']!;
-    _flashlightMode = cameraSettings['flashlightMode']!;
-
-    // Determine initial camera facing
-    final cameraFacing = _defaultCamera == 'Front' 
-        ? CameraFacing.front 
-        : CameraFacing.back;
-
-    // Determine initial torch mode
-    TorchState initialTorch = TorchState.off;
-    if (_flashlightMode == 'Auto') {
-      initialTorch = TorchState.auto;
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (_controller == null) return;
+    
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _restartCamera();
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+        _controller?.stop();
+        break;
     }
+  }
 
-    _controller = MobileScannerController(
-      facing: cameraFacing,
-      torchEnabled: _flashlightMode == 'Auto',
-    );
-
+  Future<void> _restartCamera() async {
+    if (!mounted) return;
+    
+    // Dispose old controller
+    await _controller?.dispose();
+    _controller = null;
+    
     setState(() {
-      _isFlashOn = _flashlightMode == 'Auto';
-      _isInitialized = true;
+      _isInitialized = false;
     });
+    
+    // Reinitialize
+    await _initCameraWithSettings();
+  }
+
+  Future<void> _initCameraWithSettings() async {
+    try {
+      final cameraSettings = await SettingsService.loadCameraSettings();
+      _defaultCamera = cameraSettings['defaultCamera']!;
+      _flashlightMode = cameraSettings['flashlightMode']!;
+
+      // Determine initial camera facing
+      final cameraFacing = _defaultCamera == 'Front' 
+          ? CameraFacing.front 
+          : CameraFacing.back;
+
+      _controller = MobileScannerController(
+        facing: cameraFacing,
+        torchEnabled: _flashlightMode == 'Auto',
+        // FASTEST DETECTION SETTINGS:
+        detectionSpeed: DetectionSpeed.noDuplicates, // Fastest - no duplicate prevention overhead
+        detectionTimeoutMs: 250, // Quick timeout for fast successive scans
+        autoStart: true,
+        returnImage: false, // Don't return image data - faster processing
+      );
+
+      // Wait for camera to be ready
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      if (mounted) {
+        setState(() {
+          _isFlashOn = _flashlightMode == 'Auto';
+          _isInitialized = true;
+          _isScanning = true;
+        });
+      }
+    } catch (e) {
+      debugPrint('Camera init error: $e');
+    }
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller?.dispose();
     _animationController.dispose();
     super.dispose();
@@ -293,7 +337,7 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: Container(
-                        height: 48, width: 240,
+                        height: 48, width: 320,
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.4),
@@ -304,6 +348,7 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
                           children: [
                             _buildModeItem("QR Code", primaryColor),
                             _buildModeItem("Barcode", primaryColor),
+                            _buildBatchModeItem(primaryColor),
                           ],
                         ),
                       ),
@@ -480,6 +525,52 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
     );
   }
 
+  Widget _buildBatchModeItem(Color primaryColor) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () async {
+          // Stop camera before navigating
+          await _controller?.stop();
+          
+          if (mounted) {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BatchScanScreen()),
+            );
+            
+            // Restart camera when returning
+            await _restartCamera();
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [primaryColor.withOpacity(0.3), Colors.orange.withOpacity(0.3)],
+            ),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: primaryColor.withOpacity(0.5)),
+          ),
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.layers, color: primaryColor, size: 14),
+              const SizedBox(width: 4),
+              Text(
+                'Batch',
+                style: GoogleFonts.inter(
+                  color: primaryColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildCorner(Alignment alignment) {
     const double size = 32.0;
     const double weight = 4.0;
@@ -598,6 +689,30 @@ class _ResultModalState extends State<_ResultModal> {
     }
   }
 
+  Future<void> _searchOnAmazon() async {
+    final searchQuery = Uri.encodeComponent(widget.code);
+    final url = Uri.parse('https://www.amazon.com/s?k=$searchQuery');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  Future<void> _searchOnEbay() async {
+    final searchQuery = Uri.encodeComponent(widget.code);
+    final url = Uri.parse('https://www.ebay.com/sch/i.html?_nkw=$searchQuery');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  Future<void> _searchOnGoogle() async {
+    final searchQuery = Uri.encodeComponent(widget.code);
+    final url = Uri.parse('https://www.google.com/search?q=$searchQuery');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFF13EC49);
@@ -682,8 +797,74 @@ class _ResultModalState extends State<_ResultModal> {
               ),
             ],
           ),
+          const SizedBox(height: 16),
+          // Search Buttons Row
+          Row(
+            children: [
+              Expanded(
+                child: _buildSearchButton(
+                  onTap: _searchOnAmazon,
+                  icon: Icons.shopping_cart,
+                  label: 'Amazon',
+                  color: const Color(0xFFFF9900),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildSearchButton(
+                  onTap: _searchOnEbay,
+                  icon: Icons.storefront,
+                  label: 'eBay',
+                  color: const Color(0xFFE53238),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildSearchButton(
+                  onTap: _searchOnGoogle,
+                  icon: Icons.search,
+                  label: 'Google',
+                  color: const Color(0xFF4285F4),
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 20),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSearchButton({
+    required VoidCallback onTap,
+    required IconData icon,
+    required String label,
+    required Color color,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withOpacity(0.3)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: color, size: 20),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: GoogleFonts.inter(
+                color: color,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
